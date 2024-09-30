@@ -4,6 +4,10 @@ CREATE TABLE unesco_raw
     longitude FLOAT, latitude FLOAT, area_hectares FLOAT,
     category TEXT, category_id INTEGER, state TEXT, state_id INTEGER,
     region TEXT, region_id INTEGER, iso TEXT, iso_id INTEGER);
+--file csv
+--https://www.pg4e.com/tools/sql/whc-sites-2018-small.csv?PHPSESSID=016e0716ca1b4c2d6e2381473e8f43b6%22
+
+\copy unesco_raw(name,description,justification,year,longitude,latitude,area_hectares,category,state,region,iso) FROM 'whc-sites-2018-small.csv' WITH DELIMITER ',' CSV HEADER;
 
    
 select * from unesco_raw ur ;
@@ -60,3 +64,12 @@ insert into unesco(name, description, justification, year, longitude, latitude, 
 
 
 select * from unesco;
+
+SELECT unesco.name, year, category.name, state.name, region.name, iso.name
+  FROM unesco
+  JOIN category ON unesco.category_id = category.id
+  JOIN iso ON unesco.iso_id = iso.id
+  JOIN state ON unesco.state_id = state.id
+  JOIN region ON unesco.region_id = region.id
+  ORDER BY iso.name, unesco.name
+  LIMIT 3;
